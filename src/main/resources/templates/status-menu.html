@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Status Management</title>
+    <link id="theme-link" rel="stylesheet" th:href="@{/css/external-styles-light-mode.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div style="display: flex; justify-content: flex-start; margin-bottom: 20px;">
+    <a th:href="@{/status/home}" class="btn btn-primary">
+        <i class="fas fa-arrow-left" style="color:green;" title="Back"></i>
+    </a>
+</div>
+
+<div class="table-wrapper-2">
+    <table style="margin-bottom: 50px;">
+        <thead>
+        <tr>
+            <th>Display Order</th>
+            <th style="width:15%;">Status</th>
+            <th style="width:10%;" >Left</th>
+            <th style="width:10%;" >Right</th>
+            <th style="width:10%;" >Jump To</th>
+            <th>Addable</th>
+            <th>Editable</th>
+            <th>Deletable</th>
+            <th>Archivable</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="statusBean : ${statusBeans}">
+            <form th:action="@{/status/update}" method="post">
+
+                <td>
+                    <input type="hidden" name="id" th:value="${statusBean.id}"/>
+                    <input type="number" name="displayOrderId" th:value="${statusBean.displayOrderId}"
+                           class="input-minimal" readonly/>
+                </td>
+
+                <td>
+                    <input type="text" name="status" th:value="${statusBean.status}" class="input-minimal"
+                           readonly/>
+                </td>
+
+                <td>
+                    <select name="left" class="edit-field" disabled>
+                        <option value="NA">-- None --</option>
+                        <option th:each="sb : ${statusBeans}"
+                                th:if="${sb.status != statusBean.status}"
+                                th:value="${sb.status}"
+                                th:text="${sb.status}"
+                                th:selected="${sb.status == statusBean.left}">
+                        </option>
+                    </select>
+                </td>
+
+                <td>
+                    <select name="right" class="edit-field" disabled>
+                        <option value="NA">-- None --</option>
+                        <option th:each="sb : ${statusBeans}"
+                                th:if="${sb.status != statusBean.status}"
+                                th:value="${sb.status}"
+                                th:text="${sb.status}"
+                                th:selected="${sb.status == statusBean.right}">
+                        </option>
+                    </select>
+                </td>
+
+                <td>
+                    <select name="jumpTo" class="edit-field" disabled>
+                        <option value="NA">-- None --</option>
+                        <option th:each="sb : ${statusBeans}"
+                                th:if="${sb.status != statusBean.status}"
+                                th:value="${sb.status}"
+                                th:text="${sb.status}"
+                                th:selected="${sb.status == statusBean.jumpTo}">
+                        </option>
+                    </select>
+                </td>
+
+                <td>
+                    <input type="checkbox" name="addable" class="edit-field" th:checked="${statusBean.addable}"
+                           disabled/>
+                </td>
+                <td>
+                    <input type="checkbox" name="editable" class="edit-field" th:checked="${statusBean.editable}"
+                           disabled/>
+                </td>
+                <td>
+                    <input type="checkbox" name="deletable" class="edit-field" th:checked="${statusBean.deletable}"
+                           disabled/>
+                </td>
+                <td>
+                    <input type="checkbox" name="archivable" class="edit-field" th:checked="${statusBean.archivable}"
+                           disabled/>
+                </td>
+
+                <td>
+                    <button type="button" class="btn-light" onclick="enableEdit(this)"
+                            style="border:none; background:none; padding:0;">
+                        <i class="fas fa-edit" style="color:blue;" title="Edit"></i>
+                    </button>
+                    <button type="submit" class="btn-light hidden" style="border:none; background:none; padding:0;">
+                        <i class="fas fa-save" style="color:green;" title="Save"></i>
+                    </button>
+                </td>
+            </form>
+            <td>
+                <form th:action="@{/status/{id}/delete(id=${statusBean.id})}" method="post"
+                      style="display:inline;">
+                    <button type="submit" class="btn-light" style="border:none; background:none; padding:0;">
+                        <i class="fas fa-trash-alt" style="color:red;" title="Delete"></i>
+                    </button>
+                </form>
+            </td>
+
+        </tr>
+        <tr>
+            <form th:action="@{/status/add}" method="post" th:object="${newStatusBean}">
+                <td>
+                    <input type="number" name="displayOrderId" th:field="*{displayOrderId}"
+                           placeholder="Enter display Order" class="input-minimal" required/>
+                </td>
+                <td><input type="text" th:field="*{status}" placeholder="Add new status and click Enter"
+                           class="input-minimal" required/></td>
+
+                <td>
+                    <select th:field="*{left}">
+                        <option value="NA">-- None --</option>
+                        <option th:each="sb : ${statusBeans}"
+                                th:value="${sb.status}"
+                                th:text="${sb.status}">
+                        </option>
+                    </select>
+                </td>
+
+                <td>
+                    <select th:field="*{right}">
+                        <option value="NA">-- None --</option>
+                        <option th:each="sb : ${statusBeans}"
+                                th:value="${sb.status}"
+                                th:text="${sb.status}">
+                        </option>
+                    </select>
+                </td>
+
+                <td>
+                    <select th:field="*{jumpTo}">
+                        <option value="NA">-- None --</option>
+                        <option th:each="sb : ${statusBeans}"
+                                th:value="${sb.status}"
+                                th:text="${sb.status}">
+                        </option>
+                    </select>
+                </td>
+
+                <td><input type="checkbox" th:field="*{addable}"/></td>
+                <td><input type="checkbox" th:field="*{editable}"/></td>
+                <td><input type="checkbox" th:field="*{deletable}"/></td>
+                <td><input type="checkbox" th:field="*{archivable}"/></td>
+                <td>
+                    <button type="submit" class="btn-light" style="border:none; background:none; padding:0;">
+                        <i class="fas fa-plus" style="color:green;" title="Add"></i>
+                    </button>
+                </td>
+            </form>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    const themeLink = document.getElementById("theme-link");
+    const themeIcon = document.getElementById("themeIcon");
+
+    // Load saved theme or default to light
+    const savedTheme = localStorage.getItem("theme") || "light";
+    themeLink.href = `/css/external-styles-${savedTheme}-mode.css`;
+    themeIcon.className = savedTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+
+
+    function enableEdit(button) {
+        // Disable all other edit buttons
+        document.querySelectorAll('button[type="button"]').forEach(editBtn => {
+            if (editBtn !== button) {
+                editBtn.disabled = true;
+                editBtn.classList.add('hidden');
+            }
+        });
+
+    // Enable fields in the current row
+    const row = button.closest('tr');
+    row.querySelectorAll('.edit-field').forEach(el => el.disabled = false);
+    row.querySelector('input[name="status"]').removeAttribute('readonly');
+    row.querySelector('input[name="displayOrderId"]').removeAttribute('readonly');
+
+    // Show save button, hide edit button
+    const saveButton = row.querySelector('button[type="submit"]');
+    saveButton.classList.remove('hidden');
+    button.classList.add('hidden');
+}
+</script>
+
+</body>
+</html>

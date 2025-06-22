@@ -1,0 +1,238 @@
+/* === Dark Mode === */
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* Buttons */
+.btn-light {
+  background-color: #2c2c2c;
+  color: #f1f1f1;
+  border: 0.05rem solid #555;
+}
+
+.btn-light:hover {
+  background-color: #3a3a3a;
+  border-color: #777;
+}
+
+.btn-light:active {
+  background-color: #444;
+  border-color: #999;
+}
+
+/* Table */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  color: #e0e0e0;
+}
+
+th, td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+tr:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+tr:hover {
+  background-color: #2a2a2a;
+}
+
+/* Form elements */
+.form-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input-minimal {
+  border: none;
+  background: transparent;
+  color: #e0e0e0;
+  width: 100%;
+  padding: 0.4% 0.8%;
+  outline: none;
+  border-bottom: 0.1% dashed #666;
+  font-family: Arial, sans-serif;
+  font-size: 100%;
+  resize: vertical;
+  min-height: 1.8em;
+  line-height: 1.4em;
+  box-sizing: border-box;
+}
+
+.input-minimal:focus {
+  border-bottom: 0.1% dashed #aaa;
+  background-color: #2a2a2a;
+}
+
+/* Containers */
+.flex-container {
+  display: flex;
+  gap: 4%;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.collapsible-div {
+  width: 48%;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+/* Table layout */
+.table-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.table-wrapper {
+  padding: 6px 8px !important;
+  font-size: 1rem !important;
+  line-height: 1.4em;
+  vertical-align: middle !important;
+  white-space: nowrap;
+  background-color: #121212;
+}
+
+.table-wrapper table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 5px;
+  word-wrap: break-word;
+  line-height: 1.4em;
+  border-color: #444;
+}
+
+/* Icons */
+i.fas, i.fa-solid {
+  font-size: 1.5rem;
+  color: #cccccc;
+}
+
+i.fa-red-arrow {
+  color: #cc4444;
+  font-size: 1.3rem;
+}
+
+i.fa-green-tick {
+  color: #44cc44;
+  font-size: 1.3rem;
+}
+
+
+/* Media Queries (keep as is, just inherit dark styles) */
+@media (min-width: 1200px) {
+  .table-grid {
+      grid-template-columns: repeat(2, 1fr);
+  }
+
+  .table-wrapper th,
+  .table-wrapper td {
+      font-size: 1rem;
+      line-height: 1.2em;
+      vertical-align: middle !important;
+      white-space: nowrap;
+  }
+
+  .btn-light {
+      font-size: 0.9rem !important;
+  }
+
+  .input-minimal {
+      min-height: 1.2em !important;
+      font-size: 0.9rem !important;
+  }
+
+  .table-wrapper td i.fas,
+  .table-wrapper td i.fa-solid {
+      font-size: 1.3rem !important;
+      margin: 0 3px !important;
+      vertical-align: middle !important;
+  }
+
+  i.fas, i.fa-solid {
+      font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 2500px) {
+  .table-grid {
+      grid-template-columns: repeat(4, 1fr);
+  }
+
+  .table-wrapper th,
+  .table-wrapper td {
+      font-size: 1rem;
+      line-height: 1.2em;
+      vertical-align: middle !important;
+      white-space: nowrap;
+  }
+
+  .btn-light {
+      font-size: 0.9rem !important;
+  }
+
+  .input-minimal {
+      min-height: 1.2em !important;
+      font-size: 0.9rem !important;
+  }
+
+  .table-wrapper td i.fas,
+  .table-wrapper td i.fa-solid {
+      font-size: 1.3rem !important;
+      margin: 0 3px !important;
+      vertical-align: middle !important;
+  }
+
+  i.fas, i.fa-solid {
+      font-size: 1.2rem;
+  }
+}
+
+/* Wide Table Wrapper */
+.table-wrapper-2 {
+  width: 1300px;
+  margin: 0 auto;
+  padding: 10px;
+  background: #1e1e1e;
+  box-sizing: border-box;
+}
+
+.table-wrapper-2 table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  transition: transform 0.2s ease, color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.3);
+  color: #f39c12; /* warm sun-like gold */
+  text-shadow: 0 0 8px #f39c12;
+}

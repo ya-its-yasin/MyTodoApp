@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MyTodoApp</title>
+    <link id="theme-link" rel="stylesheet" th:href="@{/css/external-styles-light-mode.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        th:nth-child(1), td:nth-child(1) { width: 5%; justify-content: center; align-items: center; text-align: center;}   /* ID */
+        th:nth-child(2), td:nth-child(2) { text-align: center; }
+        th:nth-child(3), td:nth-child(3) { width: 15%; }
+        th:nth-child(4), td:nth-child(4) { width: 10%; }
+    </style>
+</head>
+
+<body>
+
+<div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+    <a th:href="@{/status-menu}" class="custom-button" title="Manage Status">
+        <i class="fa-solid fa-gear"></i>Manage Status
+    </a>
+    <button id="themeToggleBtn" onclick="toggleTheme()" class="theme-toggle-btn" title="Switch Theme" style="margin-left: 10px;">
+        <i id="themeIcon" class="fas fa-moon"></i>
+    </button>
+</div>
+
+<div class="table-grid">
+    <div class="table-wrapper" th:each="entry : ${taskMap}">
+        <table th:if="${entry.key.status != 'Unmapped Tasks'}" style="margin-bottom: 30px;">
+            <tr>
+                <th></th>
+                <th th:text="${entry.key.status}"></th>
+                <th>Actions</th>
+            </tr>
+
+            <!-- Loop through list of tasks (entry.value) -->
+            <tr th:each="myTaskBean : ${entry.value}">
+                <td><i class="fas fa-list-check"></i></td>
+                <td>
+                    <form th:action="@{/myTasks/{id}/updateDescription(id=${myTaskBean.id})}" method="post"
+                          class="form-inline">
+                        <input type="text"
+                               name="description"
+                               th:value="${myTaskBean.description}"
+                               class="input-minimal"
+                               th:disabled="${!entry.key.editable}"
+                               required/>
+                        <button type="submit" class="btn-light" style="display:none">Save</button>
+                    </form>
+                </td>
+                <td>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 7.5%;">
+                        <form th:if="${entry.key.leftStatus != null and entry.key.leftStatus != '' and entry.key.leftStatus != 'NA'}"
+                              th:action="@{/myTasks/{id}/moveleft(id=${myTaskBean.id})}" method="post">
+                            <button type="submit" class="btn-light"
+                                    style="border:none; background:none; padding:0;">
+                                <i class="fas fa-undo" style="color:red;" title="Move Back"></i>
+                            </button>
+                        </form>
+                        <form th:if="${entry.key.deletable}"
+                              th:action="@{/myTasks/{id}/delete(id=${myTaskBean.id})}" method="post">
+                            <button type="submit" class="btn-light"
+                                    style="border:none; background:none; padding:0;">
+                                <i class="fas fa-trash-alt" style="color:red;" title="Delete"></i>
+                            </button>
+                        </form>
+                        <form th:if="${entry.key.rightStatus != null and entry.key.rightStatus != '' and entry.key.rightStatus != 'NA'}"
+                              th:action="@{/myTasks/{id}/moveright(id=${myTaskBean.id})}" method="post">
+                            <button type="submit" class="btn-light"
+                                    style="border:none; background:none; padding:0;">
+                                <i class="fas fa-arrow-right" style="color:green;" title="Move Right"></i>
+                            </button>
+                        </form>
+                        <form th:if="${entry.key.jumpToStatus != null and entry.key.jumpToStatus != '' and entry.key.jumpToStatus != 'NA'}"
+                              th:action="@{/myTasks/{id}/jump(id=${myTaskBean.id})}" method="post"
+                              style="margin: 0;">
+                            <button type="submit" class="btn-light"
+                                    style="border:none; background:none; padding:0;">
+                                <i class="fas fa-check" style="color:green;" title="Complete"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Add Task Row (optional per section) -->
+            <tr th:if="${entry.key.addable}">
+                <td></td>
+                <td>
+                    <form th:action="@{/addTask}" method="post" th:object="${myTaskBean}">
+                        <input type="text" th:field="*{description}" placeholder="Add a new task"
+                               class="input-minimal" required/>
+                        <input type="hidden" name="status" th:value="${entry.key.status}"/>
+                        <button type="submit" class="btn-light" style="display:none">Add Task</button>
+                    </form>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <table th:if="${entry.key.status == 'Unmapped Tasks' and !#lists.isEmpty(entry.value)}" style="margin-bottom: 30px;">
+            <thead>
+            <th></th>
+            <th th:text="${entry.key.status}"></th>
+            <th>Status</th>
+            <th>Action</th>
+            </thead>
+            <tbody>
+            <!-- Loop through list of tasks (entry.value) -->
+            <tr th:each="myTaskBean : ${entry.value}">
+                <td><i class="fas fa-list-check"></i></td>
+                <td>
+                    <input type="text"
+                           name="description"
+                           th:value="${myTaskBean.description}"
+                           class="input-minimal"
+                           readonly/>
+                </td>
+                <td>
+                    <input type="text"
+                           name="status"
+                           th:value="${myTaskBean.status}"
+                           class="input-minimal"
+                           readonly/>
+                </td>
+                <td>
+                    <form th:action="@{/myTasks/{id}/delete(id=${myTaskBean.id})}" method="post">
+                        <button type="submit" class="btn-light"
+                                style="border:none; background:none; padding:0;">
+                            <i class="fas fa-trash-alt" style="color:red;" title="Delete"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const themeLink = document.getElementById("theme-link");
+    const themeIcon = document.getElementById("themeIcon");
+
+    // Load saved theme or default to light
+    const savedTheme = localStorage.getItem("theme") || "light";
+    themeLink.href = `/css/external-styles-${savedTheme}-mode.css`;
+    themeIcon.className = savedTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+
+    function toggleTheme() {
+        const currentTheme = localStorage.getItem("theme") || "light";
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+
+        themeLink.href = `/css/external-styles-${newTheme}-mode.css`;
+        localStorage.setItem("theme", newTheme);
+
+        themeIcon.className = newTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+    }
+
+    function toggleDiv(divId, btn) {
+        const div = document.getElementById(divId);
+        const icon = btn.querySelector("i");
+        const label = btn.querySelector("span");
+        const isHidden = div.style.display === 'none' || div.style.display === '';
+        div.style.display = isHidden ? 'block' : 'none';
+        icon.className = isHidden ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+        label.textContent = isHidden ? 'Hide' : 'Show';
+    }
+</script>
+
+</body>
+</html>
